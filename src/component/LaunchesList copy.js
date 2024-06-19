@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchLaunches } from '../store/launchesSlice';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const LaunchesList = () => {
-  const dispatch = useDispatch();
-  const { launches, loading, error } = useSelector(state => state.launches);
+  const [launches, setLaunches] = useState([]);
   const [filteredLaunches, setFilteredLaunches] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [launchYear, setLaunchYear] = useState('');
   const [launchStatus, setLaunchStatus] = useState('');
 
   useEffect(() => {
-    dispatch(fetchLaunches());
-  }, [dispatch]);
+    const fetchLaunches = async () => {
+      const response = await axios.get('https://api.spacexdata.com/v4/launches');
+      setLaunches(response.data);
+      setFilteredLaunches(response.data);
+    };
+    fetchLaunches();
+  }, []);
 
   useEffect(() => {
     filterLaunches();
-  }, [searchTerm, launchYear, launchStatus, launches]);
+  }, [searchTerm, launchYear, launchStatus]);
 
   const filterLaunches = () => {
     let filtered = launches.filter(launch =>
@@ -81,9 +84,7 @@ const LaunchesList = () => {
         </div>
       </div>
       <div className="row">
-        {loading && <p>Loading...</p>}
-        {error && <p>Error fetching launches: {error}</p>}
-        {!loading && !error && filteredLaunches.map(launch => (
+        {filteredLaunches.map(launch => (
           <div key={launch.id} className="col-md-4 mb-4">
             <div className="card">
               <img src={launch.links.patch.small || 'https://via.placeholder.com/150'} className="card-img-top" alt={launch.name} />
