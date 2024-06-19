@@ -6,8 +6,8 @@ Steps to Run the Application
 --------------------------------------
 **Clone the Repository (if you haven't already):**
 
-git clone <repository-url>
-cd <repository-folder>
+**git clone https://github.com/Vishwanath20/salesken-assessment.git
+cd salesken-assessment**
 -----------------------------------------
 **Install Dependencies:**
 
